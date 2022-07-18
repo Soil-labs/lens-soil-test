@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { UserContext } from "@/components/layout";
 import { Button, TextField, Loading } from "../elements";
 import { AddPhoto } from "./";
+import { SelectProfile } from "../lens";
 
 import { useMutation } from "@apollo/client";
 import { CREATE_POST_TYPED_DATA } from "@/queries/publications/create-post";
@@ -19,7 +20,8 @@ interface selectedPictureType {
 }
 
 export const CreateProject = () => {
-  const { defaultProfile } = useContext(UserContext);
+  // const { defaultProfile } = useContext(UserContext);
+  const [selectedProfileId, setSelectedProfileId] = useState<string>("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedPicture, setSelectedPicture] =
@@ -107,7 +109,7 @@ export const CreateProject = () => {
     createPostTypedData({
       variables: {
         request: {
-          profileId: defaultProfile?.id,
+          profileId: selectedProfileId,
           contentURI: `https://ipfs.infura.io/ipfs/` + result.path,
           collectModule: {
             freeCollectModule: {
@@ -122,6 +124,8 @@ export const CreateProject = () => {
     });
   };
 
+  // if (!defaultProfile) return null;
+
   if (submitting)
     return (
       <div className="border rounded p-4 md:w-1/2 h-72">
@@ -131,28 +135,35 @@ export const CreateProject = () => {
 
   return (
     <div className="border rounded p-4 md:w-1/2 text-gray-700">
-      <div className="flex justify-between text-sm font-medium mb-4">
-        <span>{defaultProfile.handle}</span>
-        <span>user id {defaultProfile?.id}</span>
-      </div>
+      <SelectProfile onSelect={(id) => setSelectedProfileId(id)} />
 
-      <h1 className="text-center  font-semibold">
-        Create Project - user id {defaultProfile?.id}
-      </h1>
-      <TextField label="name" onChange={(e) => setName(e.target.value)} />
-      <TextField
-        label="description"
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <AddPhoto onSelect={(photo) => setSelectedPicture(photo)} />
+      {!selectedProfileId ? (
+        <div className="text-center">
+          <p className="text-gray-700">
+            Please select a profile to create a project.
+          </p>
+        </div>
+      ) : (
+        <>
+          <h1 className="text-center  font-semibold">
+            Create Project - user id {selectedProfileId}
+          </h1>
+          <TextField label="name" onChange={(e) => setName(e.target.value)} />
+          <TextField
+            label="description"
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <AddPhoto onSelect={(photo) => setSelectedPicture(photo)} />
 
-      <Button
-        className="my-4 p-2"
-        disabled={name === "" || description === "" || !selectedPicture}
-        onClick={() => handleSubmit()}
-      >
-        Create Project
-      </Button>
+          <Button
+            className="my-4 p-2"
+            disabled={name === "" || description === "" || !selectedPicture}
+            onClick={() => handleSubmit()}
+          >
+            Create Project
+          </Button>
+        </>
+      )}
     </div>
   );
 };
