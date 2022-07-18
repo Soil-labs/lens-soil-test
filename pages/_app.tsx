@@ -53,7 +53,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider coolMode chains={chains}>
-        <ApolloProvider client={apolloClient()}>
+        <ApolloProvider client={apolloClient}>
           <AppLayout>
             <Component {...pageProps} />
           </AppLayout>

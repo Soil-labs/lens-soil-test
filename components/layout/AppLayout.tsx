@@ -55,6 +55,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       variables: {
         request: { ownedBy: address },
       },
+      // context: { serviceName: "soilservice" },
     }
   );
 
@@ -92,8 +93,8 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
     }
   }, [userProfilesData?.profiles]);
 
-  //   console.log("ALL PROFILES", userProfilesData);
-  //   console.log("current profile", currentProfileData);
+  // console.log("ALL PROFILES", userProfilesData);
+  // console.log("current profile", currentProfileData);
 
   const injectContext = {
     profiles: userProfilesData?.profiles?.items,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, TextField, Loading, Error } from "@/components/elements";
 import { AddPhoto } from "../create-project";
+import { useAccount } from "wagmi";
 
 interface selectedPictureType {
   item: string;
@@ -24,6 +25,8 @@ export const CREATE_PROFILE = gql`
 `;
 
 export const CreateProfile = () => {
+  const { address } = useAccount();
+
   const [handle, setHandle] = useState("");
   const [selectedPicture, setSelectedPicture] =
     useState<selectedPictureType | null>(null);
@@ -52,6 +55,13 @@ export const CreateProfile = () => {
 
   if (loading) return <Loading />;
   if (error) return <Error />;
+
+  if (!address)
+    return (
+      <div className="mt-12 text-center font-bold text-3xl">
+        Please connect your wallet to create a profile
+      </div>
+    );
 
   const handleCreateProfile = async () => {
     setSubmitError("");

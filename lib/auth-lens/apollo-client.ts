@@ -4,6 +4,7 @@ import {
   HttpLink,
   ApolloLink,
 } from "@apollo/client";
+import { RetryLink } from "@apollo/client/link/retry";
 import {
   getAuthenticationToken,
   getRefreshToken,
@@ -22,10 +23,14 @@ type decodedType = {
 };
 let decoded: decodedType;
 
-// const APIURL = "https://api-mumbai.lens.dev/";
-const httpLink = new HttpLink({ uri: LENS_API_URL });
+// Soil API endpoint
+const APIURL = "https://oasis-bot-test-deploy.herokuapp.com/graphql";
+const httpLinkSoil = new HttpLink({ uri: APIURL });
 
-const authLink = new ApolloLink((operation, forward) => {
+// Lens API endpoint
+const httpLinkLens = new HttpLink({ uri: LENS_API_URL });
+
+export const authLink = new ApolloLink((operation, forward) => {
   const token = getAuthenticationToken() as string;
   const refreshToken = getRefreshToken() as string;
   if (token) decoded = jwt_decode(token as string);
@@ -54,33 +59,11 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-// export const apolloClient = new ApolloClient({
-//   uri: APIURL,
-//   cache: new InMemoryCache(),
-// });
-
-export const apolloClient = () => {
-  const apolloClient = new ApolloClient({
-    link: authLink.concat(httpLink),
-    uri: LENS_API_URL,
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            explorePublications: lensPagination(["request", ["sortCriteria"]]),
-            publications: lensPagination([
-              "request",
-              ["profileId", "publicationTypes", "commentsOf"],
-            ]),
-            followers: lensPagination(["request", ["profileId"]]),
-            following: lensPagination(["request", ["address"]]),
-          },
-        },
-      },
-    }),
-  });
-  return apolloClient;
-};
+const directionalLink = new RetryLink().split(
+  (operation) => operation.getContext().serviceName === "soilservice",
+  httpLinkSoil,
+  authLink.concat(httpLinkLens)
+);
 
 const lensPagination = (keyArgs: any) => {
   return {
@@ -99,3 +82,24 @@ const lensPagination = (keyArgs: any) => {
     },
   };
 };
+
+export const apolloClient = new ApolloClient({
+  // link: directionalLink,
+  link: authLink.concat(httpLinkLens),
+  // uri: LENS_API_URL,
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          explorePublications: lensPagination(["request", ["sortCriteria"]]),
+          publications: lensPagination([
+            "request",
+            ["profileId", "publicationTypes", "commentsOf"],
+          ]),
+          // followers: lensPagination(["request", ["profileId"]]),
+          // following: lensPagination(["request", ["address"]]),
+        },
+      },
+    },
+  }),
+});
