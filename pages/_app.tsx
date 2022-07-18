@@ -1,5 +1,6 @@
 import * as React from "react";
 import type { AppProps } from "next/app";
+import { AppLayout } from "@/components/layout";
 import "../styles/globals.css";
 
 // Imports
@@ -53,7 +54,9 @@ const App = ({ Component, pageProps }: AppProps) => {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider coolMode chains={chains}>
         <ApolloProvider client={apolloClient()}>
-          <Component {...pageProps} />
+          <AppLayout>
+            <Component {...pageProps} />
+          </AppLayout>
         </ApolloProvider>
       </RainbowKitProvider>
     </WagmiConfig>

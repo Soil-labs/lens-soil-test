@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
 
 import { ProfileFragmentLite } from "./ProfileFragmentLite";
-import { PostPostFragment } from "./PostFragment";
+import { PostFragment } from "./PostFragment";
 import { MediaFieldsFragment } from "./MediaFieldsFragment";
 import { CollectFragmentLite } from "./CollectFragmentLite";
 
-export const PostCommentFragment = gql`
-  fragment PostCommentFragment on Comment {
+export const CommentFragment = gql`
+  fragment CommentFragment on Comment {
     id
 
     profile {
@@ -26,7 +26,7 @@ export const PostCommentFragment = gql`
     }
     mainPost {
       ... on Post {
-        ...PostPostFragment
+        ...PostFragment
       }
       ... on Mirror {
         id
@@ -82,7 +82,7 @@ export const PostCommentFragment = gql`
     appId
   }
   ${ProfileFragmentLite}
-  ${PostPostFragment}
+  ${PostFragment}
   ${MediaFieldsFragment}
   ${CollectFragmentLite}
 `;

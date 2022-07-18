@@ -9,6 +9,8 @@ export const ProfileFragmentLite = gql`
     name
     bio
     ownedBy
+    isFollowing
+    isFollowedByMe
     picture {
       ... on MediaSet {
         original {

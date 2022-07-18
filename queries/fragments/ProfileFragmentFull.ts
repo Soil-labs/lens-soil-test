@@ -10,6 +10,8 @@ export const ProfileFragmentFull = gql`
     bio
     isDefault
     ownedBy
+    isFollowing
+    isFollowedByMe
     picture {
       ... on MediaSet {
         original {

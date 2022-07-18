@@ -34,7 +34,7 @@ export const uploadIpfs = async ({ payload }: uploadIpfsProps) => {
       name: payload.name,
       attributes: payload.attributes || [],
       media: payload.media || [],
-      appId: payload.appId || "soil",
+      appId: payload.appId || "test project",
     })
   );
 

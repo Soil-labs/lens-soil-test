@@ -1,52 +1,77 @@
 import type { NextPage } from "next";
-import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-
-import { LensLogin } from "@/components/lens";
-import { Loading, Error } from "@/components/elements";
+import { useRouter } from "next/router";
 import { CreateProject } from "@/components/create-project";
 
 import { useQuery, gql } from "@apollo/client";
-import { ProfileFragmentFull } from "@/queries/fragments/ProfileFragmentFull";
+import { PostFragment } from "@/queries/fragments/PostFragment";
 
-export const GET_PROFILES = gql`
-  query ($request: ProfileQueryRequest!) {
-    profiles(request: $request) {
+export const EXPLORE_PUBLICATIONS = gql`
+  query ($request: ExplorePublicationRequest!) {
+    explorePublications(request: $request) {
       items {
-        ...ProfileFragmentFull
+        __typename
+        ... on Post {
+          ...PostFragment
+        }
       }
       pageInfo {
-        prev
         next
         totalCount
       }
     }
   }
-  ${ProfileFragmentFull}
+  ${PostFragment}
 `;
 
 const ProjectListPage: NextPage = () => {
-  const { address } = useAccount();
-  const { data, loading, error } = useQuery(GET_PROFILES, {
+  const router = useRouter();
+  const { data, fetchMore } = useQuery(EXPLORE_PUBLICATIONS, {
     variables: {
-      request: { ownedBy: address },
+      request: {
+        sources: [`test project`],
+        sortCriteria: "LATEST",
+        publicationTypes: ["POST"],
+        limit: 10,
+      },
     },
   });
 
-  if (loading) return <Loading />;
-  if (error) return <Error />;
-
-  console.log(data);
-
   return (
     <div>
-      <div className="flex justify-between p-4">
-        <ConnectButton />
-        <LensLogin />
+      <div className="p-8">
+        <CreateProject />
       </div>
-
-      <h1>Project List Page</h1>
-      <CreateProject />
+      <div className="p-8 border">
+        <h1>Project List Page</h1>
+        {data?.explorePublications?.items?.map((item: any, index: number) => (
+          <button
+            key={index}
+            className="my-2 p-4 border rounded-md w-full hover:bg-blue-200 text-gray-700 font-medium"
+            onClick={() => router.push(`/project/${item.id}`)}
+          >
+            <div className="flex justify-between">
+              <div>appId : {item.appId}</div>
+              <div>pub # : {item.id}</div>
+            </div>
+            <div className="flex my-4">
+              <div>
+                <img
+                  src={item.metadata.image}
+                  alt={item.metadata.name}
+                  className="h-16 rounded-full"
+                />
+              </div>
+              <div className="px-4">
+                <div>name: {item.metadata.name}</div>
+                <div>decription: {item.metadata.description}</div>
+              </div>
+              <div className="pl-8">
+                <div>created by: {item.profile.handle}</div>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

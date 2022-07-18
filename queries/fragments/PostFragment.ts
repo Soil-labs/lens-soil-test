@@ -4,8 +4,8 @@ import { ProfileFragmentLite } from "./ProfileFragmentLite";
 import { MediaFieldsFragment } from "./MediaFieldsFragment";
 import { CollectFragmentLite } from "./CollectFragmentLite";
 
-export const PostPostFragment = gql`
-  fragment PostPostFragment on Post {
+export const PostFragment = gql`
+  fragment PostFragment on Post {
     id
 
     profile {
