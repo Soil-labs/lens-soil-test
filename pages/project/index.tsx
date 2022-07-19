@@ -36,6 +36,8 @@ const ProjectListPage: NextPage = () => {
     },
   });
 
+  // console.log(data);
+
   return (
     <div>
       <div className="p-8">
@@ -67,6 +69,10 @@ const ProjectListPage: NextPage = () => {
               </div>
               <div className="pl-8">
                 <div>created by: {item.profile.handle}</div>
+              </div>
+              <div className="pl-8">
+                <div>posts on : {item.stats.totalAmountOfComments}</div>
+                <div>collected : {item.stats.totalAmountOfCollects}</div>
               </div>
             </div>
           </button>

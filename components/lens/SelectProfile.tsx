@@ -10,9 +10,14 @@ export const SelectProfile = ({ onSelect }: SelectProfileProps) => {
 
   useEffect(() => {
     if (profiles) {
-      onSelect(profiles[0].id);
+      onSelect(profiles[0]);
     }
   }, [profiles]);
+
+  const handleOnChange = (value: any) => {
+    const profile = profiles?.find((p) => p.id === value);
+    onSelect(profile);
+  };
 
   return (
     <div className="relative inline-flex w-full">
@@ -28,7 +33,7 @@ export const SelectProfile = ({ onSelect }: SelectProfileProps) => {
         />
       </svg>
       <select
-        onChange={(e) => onSelect(e.target.value)}
+        onChange={(e) => handleOnChange(e.target.value)}
         className="border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none w-full"
       >
         {profiles?.map((profile, index) => (

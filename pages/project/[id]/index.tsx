@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Loading, Error } from "@/components/elements";
+import { CreateComment, CommentFeed } from "@/components/create-project";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -37,7 +38,7 @@ const ProjectPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { loading, error, data } = useQuery(GET_PUBLICATION, {
+  const { loading, error, data, refetch } = useQuery(GET_PUBLICATION, {
     variables: {
       request: {
         publicationId: id,
@@ -50,7 +51,7 @@ const ProjectPage: NextPage = () => {
   if (!data.publication) return <Error message={"PUBLICATION DOESN'T EXIST"} />;
   const { publication } = data;
 
-  // console.log("publication", publication);
+  console.log("publication", publication);
 
   return (
     <div>
@@ -86,6 +87,8 @@ const ProjectPage: NextPage = () => {
           </div>
         </div>
       </div>
+      <CreateComment publicationId={id as string} onRefetch={refetch} />
+      <CommentFeed publicationId={id as string} />
     </div>
   );
 };

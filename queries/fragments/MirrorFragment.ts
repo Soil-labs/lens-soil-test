@@ -2,8 +2,8 @@ import { gql } from "@apollo/client";
 
 import { ProfileFragmentLite } from "./ProfileFragmentLite";
 import { PostFragment } from "./PostFragment";
-import { MediaFieldsFragment } from "./MediaFieldsFragment";
 import { CollectFragmentLite } from "./CollectFragmentLite";
+import { MetadataFragment } from "./MetadataFragment";
 
 export const MirrorFragment = gql`
   fragment MirrorFragment on Mirror {
@@ -31,19 +31,9 @@ export const MirrorFragment = gql`
         }
       }
     }
-
     metadata {
-      name
-      description
-      content
-      image
-      media {
-        original {
-          ...MediaFieldsFragment
-        }
-      }
+      ...MetadataFragment
     }
-
     stats {
       totalAmountOfMirrors
       totalAmountOfCollects
@@ -58,6 +48,6 @@ export const MirrorFragment = gql`
   }
   ${ProfileFragmentLite}
   ${PostFragment}
-  ${MediaFieldsFragment}
   ${CollectFragmentLite}
+  ${MetadataFragment}
 `;

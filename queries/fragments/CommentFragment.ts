@@ -2,8 +2,8 @@ import { gql } from "@apollo/client";
 
 import { ProfileFragmentLite } from "./ProfileFragmentLite";
 import { PostFragment } from "./PostFragment";
-import { MediaFieldsFragment } from "./MediaFieldsFragment";
 import { CollectFragmentLite } from "./CollectFragmentLite";
+import { MetadataFragment } from "./MetadataFragment";
 
 export const CommentFragment = gql`
   fragment CommentFragment on Comment {
@@ -14,15 +14,7 @@ export const CommentFragment = gql`
     }
 
     metadata {
-      name
-      description
-      content
-      image
-      media {
-        original {
-          ...MediaFieldsFragment
-        }
-      }
+      ...MetadataFragment
     }
     mainPost {
       ... on Post {
@@ -31,15 +23,7 @@ export const CommentFragment = gql`
       ... on Mirror {
         id
         metadata {
-          name
-          description
-          content
-          image
-          media {
-            original {
-              ...MediaFieldsFragment
-            }
-          }
+          ...MetadataFragment
         }
         profile {
           ...ProfileFragmentLite
@@ -83,6 +67,6 @@ export const CommentFragment = gql`
   }
   ${ProfileFragmentLite}
   ${PostFragment}
-  ${MediaFieldsFragment}
   ${CollectFragmentLite}
+  ${MetadataFragment}
 `;

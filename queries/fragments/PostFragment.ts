@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 import { ProfileFragmentLite } from "./ProfileFragmentLite";
-import { MediaFieldsFragment } from "./MediaFieldsFragment";
 import { CollectFragmentLite } from "./CollectFragmentLite";
+import { MetadataFragment } from "./MetadataFragment";
 
 export const PostFragment = gql`
   fragment PostFragment on Post {
@@ -13,20 +13,7 @@ export const PostFragment = gql`
     }
 
     metadata {
-      name
-      description
-      content
-      image
-      attributes {
-        displayType
-        traitType
-        value
-      }
-      media {
-        original {
-          ...MediaFieldsFragment
-        }
-      }
+      ...MetadataFragment
     }
 
     stats {
@@ -45,6 +32,6 @@ export const PostFragment = gql`
     appId
   }
   ${ProfileFragmentLite}
-  ${MediaFieldsFragment}
+  ${MetadataFragment}
   ${CollectFragmentLite}
 `;
