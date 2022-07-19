@@ -42,11 +42,7 @@ export const AddPhoto = ({ title, description, onSelect }: AddPhotoProps) => {
               <>
                 {imageList.map((image: any, index: any) => (
                   <div key={index} className="flex w-full justify-between mt-4">
-                    <img
-                      className="h-20 rounded-full"
-                      src={image.data_url}
-                      alt=""
-                    />
+                    <img className="h-20" src={image.data_url} alt="" />
                     <div className="flex flex-col space-y-4">
                       <Button
                         className="py-1 px-2"

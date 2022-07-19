@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "@/components/layout";
 import { Button, TextField, Loading } from "../elements";
 import { AddPhoto } from "./";
-import { SelectProfile } from "../lens";
 
 import { useMutation } from "@apollo/client";
 import { CREATE_COMMENT_TYPED_DATA } from "@/queries/publications/create-comment";
@@ -27,8 +27,7 @@ export const CreateComment = ({
   publicationId,
   onRefetch,
 }: CreateCommentProps) => {
-  const [selectedProfile, setSelectedProfile] = useState<any>();
-
+  const { currentUser } = useContext(UserContext);
   const [description, setDescription] = useState("");
   const [selectedPicture, setSelectedPicture] =
     useState<selectedPictureType | null>(null);
@@ -100,7 +99,7 @@ export const CreateComment = ({
     let media = [] as any[];
 
     const payload = {
-      name: "Comment by @" + selectedProfile.handle,
+      name: "Comment by @" + currentUser.handle,
       description,
       content: description,
       image: selectedPicture?.item || null,
@@ -123,7 +122,7 @@ export const CreateComment = ({
     createCommentTypedData({
       variables: {
         request: {
-          profileId: selectedProfile.id,
+          profileId: currentUser.id,
           publicationId: publicationId,
           contentURI: `https://ipfs.infura.io/ipfs/` + result.path,
           collectModule: {
@@ -139,8 +138,6 @@ export const CreateComment = ({
     });
   };
 
-  // if (!defaultProfile) return null;
-
   if (submitting)
     return (
       <div className="border rounded p-4 md:w-1/2 h-72">
@@ -150,9 +147,7 @@ export const CreateComment = ({
 
   return (
     <div className="border rounded p-4 md:w-1/2 text-gray-700">
-      <SelectProfile onSelect={(profile) => setSelectedProfile(profile)} />
-
-      {!selectedProfile ? (
+      {!currentUser ? (
         <div className="text-center">
           <p className="text-gray-700">
             Please select a profile to make a comment.
@@ -161,7 +156,7 @@ export const CreateComment = ({
       ) : (
         <>
           <h1 className="text-center  font-semibold">
-            Create Comment - {selectedProfile.handle} - id {selectedProfile.id}
+            Create Comment - {currentUser.handle} - id {currentUser.id}
           </h1>
           <TextField
             label="comment"

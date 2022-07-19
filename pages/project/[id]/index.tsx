@@ -1,7 +1,13 @@
 import type { NextPage } from "next";
+import { useContext } from "react";
+import { UserContext } from "@/components/layout";
 import { useRouter } from "next/router";
 import { Loading, Error } from "@/components/elements";
-import { CreateComment, CommentFeed } from "@/components/create-project";
+import {
+  CreateComment,
+  CommentFeed,
+  PostReaction,
+} from "@/components/create-project";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -37,12 +43,14 @@ export const GET_PUBLICATION = gql`
 const ProjectPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  const { currentUser } = useContext(UserContext);
 
   const { loading, error, data, refetch } = useQuery(GET_PUBLICATION, {
     variables: {
       request: {
         publicationId: id,
       },
+      requestRequest: { profileId: currentUser?.id },
     },
   });
 
@@ -51,7 +59,7 @@ const ProjectPage: NextPage = () => {
   if (!data.publication) return <Error message={"PUBLICATION DOESN'T EXIST"} />;
   const { publication } = data;
 
-  console.log("publication", publication);
+  // console.log("publication", publication);
 
   return (
     <div>
@@ -66,7 +74,7 @@ const ProjectPage: NextPage = () => {
             <img
               src={publication.metadata.image}
               alt={publication.metadata.name}
-              className="h-16 rounded-full"
+              className="h-16"
             />
           </div>
           <div className="px-4">
@@ -85,6 +93,7 @@ const ProjectPage: NextPage = () => {
           <div>
             Total posts -comments- {publication.stats.totalAmountOfComments}
           </div>
+          <PostReaction publication={publication} />
         </div>
       </div>
       <CreateComment publicationId={id as string} onRefetch={refetch} />

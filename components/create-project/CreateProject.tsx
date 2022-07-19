@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "@/components/layout";
 import { Button, TextField, Loading } from "../elements";
 import { AddPhoto } from "./";
-import { SelectProfile } from "../lens";
 
 import { useMutation } from "@apollo/client";
 import { CREATE_POST_TYPED_DATA } from "@/queries/publications/create-post";
@@ -19,7 +19,7 @@ interface selectedPictureType {
 }
 
 export const CreateProject = () => {
-  const [selectedProfile, setSelectedProfile] = useState<any>();
+  const { currentUser } = useContext(UserContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedPicture, setSelectedPicture] =
@@ -107,7 +107,7 @@ export const CreateProject = () => {
     createPostTypedData({
       variables: {
         request: {
-          profileId: selectedProfile.id,
+          profileId: currentUser.id,
           contentURI: `https://ipfs.infura.io/ipfs/` + result.path,
           collectModule: {
             freeCollectModule: {
@@ -122,8 +122,6 @@ export const CreateProject = () => {
     });
   };
 
-  // if (!defaultProfile) return null;
-
   if (submitting)
     return (
       <div className="border rounded p-4 md:w-1/2 h-72">
@@ -133,9 +131,7 @@ export const CreateProject = () => {
 
   return (
     <div className="border rounded p-4 md:w-1/2 text-gray-700">
-      <SelectProfile onSelect={(profile) => setSelectedProfile(profile)} />
-
-      {!selectedProfile ? (
+      {!currentUser ? (
         <div className="text-center">
           <p className="text-gray-700">
             Please select a profile to create a project.
@@ -144,7 +140,7 @@ export const CreateProject = () => {
       ) : (
         <>
           <h1 className="text-center  font-semibold">
-            Create Project - {selectedProfile.handle} - id {selectedProfile.id}
+            Create Project - {currentUser.handle} - id {currentUser.id}
           </h1>
           <TextField label="name" onChange={(e) => setName(e.target.value)} />
           <TextField

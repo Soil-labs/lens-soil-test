@@ -1,12 +1,18 @@
+import { useContext } from "react";
+import { UserContext } from "@/components/layout";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { LensLogin } from "@/components/lens";
+import { LensLogin, SelectProfile } from "@/components/lens";
 
 export const Header = () => {
+  const { setCurrentUser, currentUser } = useContext(UserContext);
+
+  console.log("currentUser", currentUser);
   return (
     <div>
       <div className="flex justify-between p-4">
         <ConnectButton />
+        <SelectProfile onSelect={(profile) => setCurrentUser(profile)} />
         <LensLogin />
       </div>
       <nav id="bar" className="flex justify-center ">
