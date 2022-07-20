@@ -26,7 +26,7 @@ export const PostFragment = gql`
     collectModule {
       ...CollectFragmentLite
     }
-
+    hasCollectedByMe
     createdAt
     hidden
     appId

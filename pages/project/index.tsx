@@ -44,7 +44,6 @@ const ProjectListPage: NextPage = () => {
         <CreateProject />
       </div>
       <div className="p-8 border">
-        <h1>Project List Page</h1>
         {data?.explorePublications?.items?.map((item: any, index: number) => (
           <button
             key={index}
@@ -60,7 +59,7 @@ const ProjectListPage: NextPage = () => {
                 <img
                   src={item.metadata.image}
                   alt={item.metadata.name}
-                  className="h-16 rounded-full"
+                  className="h-16"
                 />
               </div>
               <div className="px-4">
@@ -71,8 +70,8 @@ const ProjectListPage: NextPage = () => {
                 <div>created by: {item.profile.handle}</div>
               </div>
               <div className="pl-8">
-                <div>posts on : {item.stats.totalAmountOfComments}</div>
-                <div>collected : {item.stats.totalAmountOfCollects}</div>
+                <div>Joined : {item.stats.totalAmountOfCollects}</div>
+                <div>Posts on : {item.stats.totalAmountOfComments}</div>
               </div>
             </div>
           </button>

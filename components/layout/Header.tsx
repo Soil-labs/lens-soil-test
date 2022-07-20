@@ -5,9 +5,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { LensLogin, SelectProfile } from "@/components/lens";
 
 export const Header = () => {
-  const { setCurrentUser, currentUser } = useContext(UserContext);
+  const { setCurrentUser } = useContext(UserContext);
 
-  console.log("currentUser", currentUser);
   return (
     <div>
       <div className="flex justify-between p-4">

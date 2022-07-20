@@ -7,6 +7,7 @@ import {
   CreateComment,
   CommentFeed,
   PostReaction,
+  JoinProject,
 } from "@/components/create-project";
 
 import { useQuery, gql } from "@apollo/client";
@@ -61,10 +62,13 @@ const ProjectPage: NextPage = () => {
 
   // console.log("publication", publication);
 
+  const handleSuccess = () => {
+    refetch();
+  };
+
   return (
     <div>
-      <h1>Project Page - {id}</h1>
-      <div className="border p-4 m-4">
+      <div className="border p-4 m-4 font-medium text-gray-700">
         <div className="flex justify-between">
           <div>appId : {publication.appId}</div>
           <div>pub # : {publication.id}</div>
@@ -87,13 +91,24 @@ const ProjectPage: NextPage = () => {
         </div>
         <div>
           <div>
-            Total in project -collected-{" "}
-            {publication.stats.totalAmountOfCollects}
+            Total Joined
+            <span className="pl-4">
+              {publication.stats.totalAmountOfCollects}
+            </span>
           </div>
           <div>
-            Total posts -comments- {publication.stats.totalAmountOfComments}
+            Total posts{" "}
+            <span className="pl-4">
+              {publication.stats.totalAmountOfComments}
+            </span>
           </div>
-          <PostReaction publication={publication} />
+          <div className="flex justify-between">
+            <PostReaction publication={publication} />
+            <JoinProject
+              publication={publication}
+              onSuccess={() => handleSuccess()}
+            />
+          </div>
         </div>
       </div>
       <CreateComment publicationId={id as string} onRefetch={refetch} />
