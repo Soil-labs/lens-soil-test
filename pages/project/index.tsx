@@ -34,6 +34,7 @@ const ProjectListPage: NextPage = () => {
         limit: 10,
       },
     },
+    context: { serviceName: "lensservice" },
   });
 
   // console.log(data);

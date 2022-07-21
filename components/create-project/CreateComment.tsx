@@ -135,6 +135,7 @@ export const CreateComment = ({
           },
         },
       },
+      context: { serviceName: "lensservice" },
     });
   };
 

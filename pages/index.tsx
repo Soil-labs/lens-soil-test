@@ -1,6 +1,23 @@
 import Head from "next/head";
 
+import { useQuery, gql } from "@apollo/client";
+export const FIND_MEMBERS = gql`
+  query ($fields: findMembersInput) {
+    findMembers(fields: $fields) {
+      _id
+    }
+  }
+`;
+
 export default function Home() {
+  const { data } = useQuery(FIND_MEMBERS, {
+    variables: {
+      fields: {},
+    },
+    context: { serviceName: "soilservice" },
+  });
+
+  console.log("data", data);
   return (
     <div className={""}>
       <Head>

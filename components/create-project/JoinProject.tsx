@@ -107,6 +107,7 @@ export const JoinProject = ({ publication, onSuccess }: JoinProjectProps) => {
           publicationId: publication.id,
         },
       },
+      context: { serviceName: "lensservice" },
     });
   };
 
@@ -116,7 +117,7 @@ export const JoinProject = ({ publication, onSuccess }: JoinProjectProps) => {
   return (
     <>
       {hasCollectedByMe ? (
-        <div className="w-36 text-center rounded-xl border-2 border-stone-800 shadow-md font-bold bg-green-600 text-gray-100  bg-stone-200/80">
+        <div className="w-36 text-center rounded-xl border-2 border-stone-800 shadow-md font-bold bg-green-600 text-gray-100">
           Joined
         </div>
       ) : (

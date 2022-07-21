@@ -3,7 +3,9 @@ import {
   InMemoryCache,
   HttpLink,
   ApolloLink,
+  from,
 } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 import { RetryLink } from "@apollo/client/link/retry";
 import {
   getAuthenticationToken,
@@ -27,10 +29,21 @@ let decoded: decodedType;
 const APIURL = "https://oasis-bot-test-deploy.herokuapp.com/graphql";
 const httpLinkSoil = new HttpLink({ uri: APIURL });
 
+const soilLink = new ApolloLink((operation, forward) => {
+  // Use the setContext method to set the HTTP headers.
+  operation.setContext({
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+  // Call the next link in the middleware chain.
+  return forward(operation);
+});
+
 // Lens API endpoint
 const httpLinkLens = new HttpLink({ uri: LENS_API_URL });
 
-export const authLink = new ApolloLink((operation, forward) => {
+const authLink = new ApolloLink((operation, forward) => {
   const token = getAuthenticationToken() as string;
   const refreshToken = getRefreshToken() as string;
   if (token) decoded = jwt_decode(token as string);
@@ -61,9 +74,13 @@ export const authLink = new ApolloLink((operation, forward) => {
 
 const directionalLink = new RetryLink().split(
   (operation) => operation.getContext().serviceName === "soilservice",
-  httpLinkSoil,
+  soilLink.concat(httpLinkSoil),
   authLink.concat(httpLinkLens)
 );
+
+const errorLink = onError(({ graphQLErrors }) => {
+  if (graphQLErrors) graphQLErrors.map(({ message }) => console.log(message));
+});
 
 const lensPagination = (keyArgs: any) => {
   return {
@@ -85,8 +102,7 @@ const lensPagination = (keyArgs: any) => {
 
 export const apolloClient = new ApolloClient({
   // link: directionalLink,
-  link: authLink.concat(httpLinkLens),
-  // uri: LENS_API_URL,
+  link: from([errorLink, directionalLink]),
   cache: new InMemoryCache({
     typePolicies: {
       Query: {

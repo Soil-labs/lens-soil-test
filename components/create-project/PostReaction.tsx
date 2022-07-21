@@ -42,6 +42,7 @@ export const PostReaction = ({ publication }: any) => {
         publicationId: id,
       },
     },
+    context: { serviceName: "lensservice" },
   };
 
   const downVoteRequest = {
@@ -52,6 +53,7 @@ export const PostReaction = ({ publication }: any) => {
         publicationId: id,
       },
     },
+    context: { serviceName: "lensservice" },
   };
 
   return (

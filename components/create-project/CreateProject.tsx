@@ -119,6 +119,7 @@ export const CreateProject = () => {
           },
         },
       },
+      context: { serviceName: "lensservice" },
     });
   };
 

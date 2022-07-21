@@ -55,9 +55,10 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       variables: {
         request: { ownedBy: address },
       },
-      // context: { serviceName: "soilservice" },
+      context: { serviceName: "lensservice" },
     }
   );
+  // const userProfilesData = {} as any;
 
   const {
     data: currentProfileData,
@@ -68,6 +69,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       request: {
         ethereumAddress: address,
       },
+      context: { serviceName: "lensservice" },
     },
   });
 

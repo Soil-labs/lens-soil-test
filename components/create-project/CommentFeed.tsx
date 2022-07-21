@@ -17,6 +17,7 @@ export const CommentFeed = ({ publicationId }: CommentFeedProps) => {
       request: {
         commentsOf: publicationId,
       },
+      context: { serviceName: "lensservice" },
       requestRequest: { profileId: currentUser?.id },
     },
   });

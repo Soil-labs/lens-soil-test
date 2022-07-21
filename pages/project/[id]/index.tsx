@@ -51,6 +51,7 @@ const ProjectPage: NextPage = () => {
       request: {
         publicationId: id,
       },
+      context: { serviceName: "lensservice" },
       requestRequest: { profileId: currentUser?.id },
     },
   });
@@ -61,10 +62,6 @@ const ProjectPage: NextPage = () => {
   const { publication } = data;
 
   // console.log("publication", publication);
-
-  const handleSuccess = () => {
-    refetch();
-  };
 
   return (
     <div>
@@ -106,7 +103,7 @@ const ProjectPage: NextPage = () => {
             <PostReaction publication={publication} />
             <JoinProject
               publication={publication}
-              onSuccess={() => handleSuccess()}
+              onSuccess={() => refetch()}
             />
           </div>
         </div>

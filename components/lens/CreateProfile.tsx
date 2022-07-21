@@ -72,6 +72,7 @@ export const CreateProfile = () => {
           profilePictureUri: selectedPicture?.item || null,
         },
       },
+      context: { serviceName: "lensservice" },
     });
   };
 
