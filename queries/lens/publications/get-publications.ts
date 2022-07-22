@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client/core";
 
-import { PostFragment } from "../fragments/PostFragment";
-import { CommentFragment } from "../fragments/CommentFragment";
-import { MirrorFragment } from "../fragments/MirrorFragment";
+import { PostFragment } from "@/queries/lens/fragments/PostFragment";
+import { CommentFragment } from "@/queries/lens/fragments/CommentFragment";
+import { MirrorFragment } from "@/queries/lens/fragments/MirrorFragment";
 
 export const GET_PUBLICATIONS = gql`
   query (

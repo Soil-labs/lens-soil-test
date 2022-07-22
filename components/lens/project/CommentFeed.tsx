@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { UserContext } from "@/components/layout";
 import { useQuery } from "@apollo/client";
-import { GET_PUBLICATIONS } from "@/queries/publications/get-publications";
+import { GET_PUBLICATIONS } from "@/queries/lens/publications/get-publications";
 import { Loading, Error } from "@/components/elements";
-import { PostReaction } from "@/components/create-project";
+import { PostReaction } from "@/components/lens/project";
 
 interface CommentFeedProps {
   publicationId: string;

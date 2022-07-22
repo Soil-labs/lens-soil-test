@@ -8,13 +8,13 @@ import {
   CommentFeed,
   PostReaction,
   JoinProject,
-} from "@/components/create-project";
+} from "@/components/lens/project";
 
 import { useQuery, gql } from "@apollo/client";
 
-import { PostFragment } from "@/queries/fragments/PostFragment";
-import { CommentFragment } from "@/queries/fragments/CommentFragment";
-import { MirrorFragment } from "@/queries/fragments/MirrorFragment";
+import { PostFragment } from "@/queries/lens/fragments/PostFragment";
+import { CommentFragment } from "@/queries/lens/fragments/CommentFragment";
+import { MirrorFragment } from "@/queries/lens/fragments/MirrorFragment";
 
 export const GET_PUBLICATION = gql`
   query (

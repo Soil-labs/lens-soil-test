@@ -14,7 +14,7 @@ import {
 } from "./state";
 import jwt_decode from "jwt-decode";
 
-import { refreshAuth } from "@/queries/auth/refresh";
+import { refreshAuth } from "@/queries/lens/auth/refresh";
 import { LENS_API_URL } from "./constants";
 
 type decodedType = {

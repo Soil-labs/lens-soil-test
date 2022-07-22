@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { CreateProject } from "@/components/create-project";
+import { CreateProject } from "@/components/lens/project";
 
 import { useQuery, gql } from "@apollo/client";
-import { PostFragment } from "@/queries/fragments/PostFragment";
+import { PostFragment } from "@/queries/lens/fragments/PostFragment";
 
 export const EXPLORE_PUBLICATIONS = gql`
   query ($request: ExplorePublicationRequest!) {

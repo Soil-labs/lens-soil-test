@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, TextField, Loading, Error } from "@/components/elements";
-import { AddPhoto } from "../create-project";
+import { AddPhoto } from "@/components/lens/project";
 import { useAccount } from "wagmi";
 
 interface selectedPictureType {

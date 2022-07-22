@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { CreateProfile } from "../../components/lens/CreateProfile";
+import { CreateProfile } from "@/components/lens/user/CreateProfile";
 
 const CreateUserPage: NextPage = () => {
   return (

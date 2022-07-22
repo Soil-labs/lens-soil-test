@@ -7,7 +7,7 @@ import { removeAuthenticationToken } from "@/lib/auth-lens/state";
 
 import { UserContext } from "@/components/layout";
 import { useQuery, gql } from "@apollo/client";
-import { ProfileFragmentFull } from "@/queries/fragments/ProfileFragmentFull";
+import { ProfileFragmentFull } from "@/queries/lens/fragments/ProfileFragmentFull";
 
 export const GET_PROFILES = gql`
   query ($request: ProfileQueryRequest!) {

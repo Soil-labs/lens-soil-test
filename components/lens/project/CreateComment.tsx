@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
 import { UserContext } from "@/components/layout";
-import { Button, TextField, Loading } from "../elements";
+import { Button, TextField, Loading } from "@/components/elements";
 import { AddPhoto } from "./";
 
 import { useMutation } from "@apollo/client";
-import { CREATE_POST_TYPED_DATA } from "@/queries/publications/create-post";
+import { CREATE_COMMENT_TYPED_DATA } from "@/queries/lens/publications/create-comment";
 import { uploadIpfs } from "@/lib/ipfs";
 
 import { useSignTypedData, useContractWrite } from "wagmi";
@@ -18,9 +18,16 @@ interface selectedPictureType {
   type: string;
 }
 
-export const CreateProject = () => {
+interface CreateCommentProps {
+  publicationId: string;
+  onRefetch: () => void;
+}
+
+export const CreateComment = ({
+  publicationId,
+  onRefetch,
+}: CreateCommentProps) => {
   const { currentUser } = useContext(UserContext);
-  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedPicture, setSelectedPicture] =
     useState<selectedPictureType | null>(null);
@@ -31,16 +38,20 @@ export const CreateProject = () => {
   const { writeAsync } = useContractWrite({
     addressOrName: LENS_HUB_PROXY_ADDRESS,
     contractInterface: LENS_ABI,
-    functionName: "postWithSig",
+    functionName: "commentWithSig",
   });
 
-  const [createPostTypedData, {}] = useMutation(CREATE_POST_TYPED_DATA, {
-    onCompleted({ createPostTypedData }: any) {
-      if (!createPostTypedData) console.log("createPost is null");
-      const { typedData } = createPostTypedData;
+  const [createCommentTypedData, {}] = useMutation(CREATE_COMMENT_TYPED_DATA, {
+    onCompleted({ createCommentTypedData }: any) {
+      const { typedData } = createCommentTypedData;
+
+      if (!createCommentTypedData) console.log("createComment is null");
       const {
         profileId,
         contentURI,
+        profileIdPointed,
+        pubIdPointed,
+        referenceModuleData,
         collectModule,
         collectModuleInitData,
         referenceModule,
@@ -51,11 +62,14 @@ export const CreateProject = () => {
         domain: omit(typedData?.domain, "__typename"),
         types: omit(typedData?.types, "__typename"),
         value: omit(typedData?.value, "__typename"),
-      }).then((res: any) => {
+      }).then((res) => {
         const { v, r, s } = splitSignature(res);
         const postARGS = {
           profileId,
           contentURI,
+          profileIdPointed,
+          pubIdPointed,
+          referenceModuleData,
           collectModule,
           collectModuleInitData,
           referenceModule,
@@ -69,6 +83,7 @@ export const CreateProject = () => {
         };
         writeAsync({ args: postARGS }).then(() => {
           setSubmitting(false);
+          onRefetch();
         });
       });
     },
@@ -84,7 +99,7 @@ export const CreateProject = () => {
     let media = [] as any[];
 
     const payload = {
-      name,
+      name: "Comment by @" + currentUser.handle,
       description,
       content: description,
       image: selectedPicture?.item || null,
@@ -95,19 +110,20 @@ export const CreateProject = () => {
           displayType: "string",
           traitType: "publication",
           key: "type",
-          value: "project",
+          value: "project comment",
         },
       ],
-      appId: "test project",
+      appId: "test project comment",
     };
     const result = await uploadIpfs({ payload });
 
     // console.log("result", result);
 
-    createPostTypedData({
+    createCommentTypedData({
       variables: {
         request: {
           profileId: currentUser.id,
+          publicationId: publicationId,
           contentURI: `https://ipfs.infura.io/ipfs/` + result.path,
           collectModule: {
             freeCollectModule: {
@@ -135,27 +151,26 @@ export const CreateProject = () => {
       {!currentUser ? (
         <div className="text-center">
           <p className="text-gray-700">
-            Please select a profile to create a project.
+            Please select a profile to make a comment.
           </p>
         </div>
       ) : (
         <>
           <h1 className="text-center  font-semibold">
-            Create Project - {currentUser.handle} - id {currentUser.id}
+            Create Comment - {currentUser.handle} - id {currentUser.id}
           </h1>
-          <TextField label="name" onChange={(e) => setName(e.target.value)} />
           <TextField
-            label="description"
+            label="comment"
             onChange={(e) => setDescription(e.target.value)}
           />
           <AddPhoto onSelect={(photo) => setSelectedPicture(photo)} />
 
           <Button
             className="my-4 p-2"
-            disabled={name === "" || description === "" || !selectedPicture}
+            disabled={description === ""}
             onClick={() => handleSubmit()}
           >
-            Create Project
+            Create Comment
           </Button>
         </>
       )}

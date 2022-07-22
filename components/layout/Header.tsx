@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UserContext } from "@/components/layout";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { LensLogin, SelectProfile } from "@/components/lens";
+import { LensLogin, SelectProfile } from "@/components/lens/user";
 
 export const Header = () => {
   const { setCurrentUser } = useContext(UserContext);
