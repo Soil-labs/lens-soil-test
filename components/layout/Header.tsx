@@ -21,7 +21,7 @@ export const Header = () => {
               Landing
             </a>
           </Link>
-          <Link href="/project">
+          <Link href="/lens-projects">
             <a className="mx-8 hover:text-blue-500 active" aria-current="page">
               Lens Project
             </a>
@@ -29,6 +29,11 @@ export const Header = () => {
           <Link href="/create-user">
             <a className="mx-8 hover:text-blue-500 active" aria-current="page">
               Create Lens User
+            </a>
+          </Link>
+          <Link href="/soil-projects">
+            <a className="mx-8 hover:text-blue-500 active" aria-current="page">
+              Soil Projects
             </a>
           </Link>
           <Link href="/members">

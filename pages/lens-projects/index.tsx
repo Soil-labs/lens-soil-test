@@ -49,7 +49,7 @@ const ProjectListPage: NextPage = () => {
           <button
             key={index}
             className="my-2 p-4 border rounded-md w-full hover:bg-blue-200 text-gray-700 font-medium"
-            onClick={() => router.push(`/project/${item.id}`)}
+            onClick={() => router.push(`/lens-projects/${item.id}`)}
           >
             <div className="flex justify-between">
               <div>appId : {item.appId}</div>
