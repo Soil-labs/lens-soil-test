@@ -96,7 +96,9 @@ export const CreateProfile = () => {
 
   return (
     <div className="mt-16 mx-auto  w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 rounded-lg shadow-lg max-w-2xl">
-      <div className="text-center font-bold p-4">Create a profile to post</div>
+      <div className="text-center font-bold p-4">
+        Create a Lens profile to post
+      </div>
       <p className="italic text-center p-2 text-red-600">
         profiles can only be created on Mumbai testnet
       </p>

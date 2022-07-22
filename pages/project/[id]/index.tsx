@@ -35,7 +35,6 @@ export const GET_PUBLICATION = gql`
       }
     }
   }
-
   ${PostFragment}
   ${CommentFragment}
   ${MirrorFragment}
