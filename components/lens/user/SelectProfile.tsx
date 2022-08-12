@@ -19,6 +19,10 @@ export const SelectProfile = ({ onSelect }: SelectProfileProps) => {
     onSelect(profile);
   };
 
+  // console.log("profiles", profiles);
+
+  if (!profiles || profiles.length === 0) return null;
+
   return (
     <div className="relative inline-flex w-60">
       <svg

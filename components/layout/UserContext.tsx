@@ -7,7 +7,7 @@ type UserContextType = {
   defaultProfile?: userProfile;
   currentUser?: userProfile;
   setCurrentUser: Dispatch<userProfile>;
-  refechProfiles: () => void;
+  // refechProfiles: () => void;
 };
 
 export const UserContext = createContext<UserContextType>({
@@ -15,5 +15,5 @@ export const UserContext = createContext<UserContextType>({
   defaultProfile: undefined,
   currentUser: undefined,
   setCurrentUser: () => {},
-  refechProfiles: () => {},
+  // refechProfiles: () => {},
 });

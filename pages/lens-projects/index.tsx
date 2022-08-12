@@ -57,11 +57,13 @@ const ProjectListPage: NextPage = () => {
             </div>
             <div className="flex my-4">
               <div>
-                <img
-                  src={item.metadata.image}
-                  alt={item.metadata.name}
-                  className="h-16"
-                />
+                {item.metadata.image && (
+                  <img
+                    src={item.metadata.image}
+                    alt={item.metadata.name}
+                    className="h-16"
+                  />
+                )}
               </div>
               <div className="px-4">
                 <div>name: {item.metadata.name}</div>

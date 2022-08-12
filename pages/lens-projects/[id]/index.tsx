@@ -71,11 +71,13 @@ const ProjectPage: NextPage = () => {
         </div>
         <div className="flex my-4">
           <div>
-            <img
-              src={publication.metadata.image}
-              alt={publication.metadata.name}
-              className="h-16"
-            />
+            {publication.metadata.image && (
+              <img
+                src={publication.metadata.image}
+                alt={publication.metadata.name}
+                className="h-16"
+              />
+            )}
           </div>
           <div className="px-4">
             <div>name: {publication.metadata.name}</div>

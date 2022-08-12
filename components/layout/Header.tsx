@@ -1,11 +1,19 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "@/components/layout";
 import Link from "next/link";
+import { useAccount } from "wagmi";
+
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { LensLogin, SelectProfile } from "@/components/lens/user";
 
 export const Header = () => {
   const { setCurrentUser } = useContext(UserContext);
+  const { isDisconnected } = useAccount();
+  useEffect(() => {
+    if (isDisconnected) {
+      setCurrentUser({});
+    }
+  }, [isDisconnected]);
 
   return (
     <div>

@@ -25,15 +25,6 @@ export const GET_PROFILES = gql`
   ${ProfileFragmentFull}
 `;
 
-export const GET_DEFAULT_PROFILE = gql`
-  query ($request: DefaultProfileRequest!) {
-    defaultProfile(request: $request) {
-      ...ProfileFragmentFull
-    }
-  }
-  ${ProfileFragmentFull}
-`;
-
 type AppLayoutProps = {
   children: React.ReactNode;
 };
@@ -42,6 +33,12 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   const { address, connector, isDisconnected } = useAccount();
   const { disconnect } = useDisconnect();
 
+  const [userProfiles, setUserProfiles] = useState<any[]>([]);
+  const [defaultProfile, setDefaultProfile] = useState<any>();
+  const [currentUserProfile, setCurrentUserProfile] = useState(
+    defaultProfile || undefined
+  );
+
   useEffect(() => {
     connector?.on("change", () => {
       removeAuthenticationToken();
@@ -49,68 +46,53 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
     });
   }, [address, connector, isDisconnected]);
 
-  const { data: userProfilesData, loading: userProfilesLoading } = useQuery(
-    GET_PROFILES,
-    {
-      variables: {
-        request: { ownedBy: address },
-      },
-      context: { serviceName: "lensservice" },
+  useEffect(() => {
+    if (isDisconnected) {
+      removeAuthenticationToken();
+      setUserProfiles([]);
+      setDefaultProfile(undefined);
     }
-  );
-  // const userProfilesData = {} as any;
+  }, [isDisconnected]);
 
-  const {
-    data: currentProfileData,
-    loading: currentProfileLoading,
-    refetch,
-  } = useQuery(GET_DEFAULT_PROFILE, {
+  const { loading: userProfilesLoading } = useQuery(GET_PROFILES, {
     variables: {
-      request: {
-        ethereumAddress: address,
-      },
-      context: { serviceName: "lensservice" },
+      request: { ownedBy: address },
+    },
+    skip: !address,
+    context: { serviceName: "lensservice" },
+    onCompleted(data) {
+      setUserProfiles(data.profiles.items);
     },
   });
 
-  const [currentUserProfile, setCurrentUserProfile] = useState(
-    currentProfileData?.defaultProfile
-  );
-
   useEffect(() => {
-    if (userProfilesData?.profiles) {
-      const profileId = localStorage.getItem("current_user_profile_id");
-      if (profileId) {
-        const profile = userProfilesData.profiles.items.find(
-          (profile: any) => profile.id === profileId
-        );
-        if (profile) {
-          setCurrentUserProfile(profile);
-        } else if (currentProfileData?.defaultProfile) {
-          setCurrentUserProfile(currentProfileData?.defaultProfile);
-        } else {
-          setCurrentUserProfile(userProfilesData.profiles.items[0]);
-        }
-      }
+    if (userProfiles && userProfiles.length > 0) {
+      const checkDefaultProfile = userProfiles.find(
+        (profile: any) => profile.isDefault
+      );
+      setDefaultProfile(checkDefaultProfile);
     }
-  }, [userProfilesData?.profiles]);
+  }, [userProfiles]);
 
   // console.log("ALL PROFILES", userProfilesData);
   // console.log("current profile", currentProfileData);
 
+  // console.log("userProfiles", userProfiles);
+
   const injectContext = {
-    profiles: userProfilesData?.profiles?.items,
-    defaultProfile: currentProfileData?.defaultProfile,
+    profiles: userProfiles,
+    defaultProfile: defaultProfile,
     currentUser: currentUserProfile,
     setCurrentUser: (profile: any) => {
-      // console.log(profile);
-      setCurrentUserProfile(profile);
-      localStorage.setItem("current_user_profile_id", profile.id);
+      if (profile) {
+        localStorage.setItem("current_user_profile_id", profile.id);
+        setCurrentUserProfile(profile);
+      }
     },
-    refechProfiles: refetch,
+    // refechProfiles: refetch,
   };
 
-  if (userProfilesLoading || currentProfileLoading) return <Loading />;
+  if (userProfilesLoading) return <Loading />;
 
   return (
     <UserContext.Provider value={injectContext}>

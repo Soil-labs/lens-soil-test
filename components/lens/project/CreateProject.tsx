@@ -26,6 +26,7 @@ export const CreateProject = () => {
     useState<selectedPictureType | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const { signTypedDataAsync } = useSignTypedData();
   const { writeAsync } = useContractWrite({
@@ -74,6 +75,7 @@ export const CreateProject = () => {
     },
     onError(error) {
       console.log(error);
+      setError("please login with lens");
       setSubmitting(false);
     },
   });
@@ -108,7 +110,7 @@ export const CreateProject = () => {
       variables: {
         request: {
           profileId: currentUser.id,
-          contentURI: `https://ipfs.infura.io/ipfs/` + result.path,
+          contentURI: `https://ipfs.infura.io/ipfs/` + result?.path,
           collectModule: {
             freeCollectModule: {
               followerOnly: false,
@@ -132,7 +134,7 @@ export const CreateProject = () => {
 
   return (
     <div className="border rounded p-4 md:w-1/2 text-gray-700">
-      {!currentUser ? (
+      {!currentUser || !currentUser.id ? (
         <div className="text-center">
           <p className="text-gray-700">
             Please select a profile to create a project.
@@ -148,15 +150,20 @@ export const CreateProject = () => {
             label="description"
             onChange={(e) => setDescription(e.target.value)}
           />
-          <AddPhoto onSelect={(photo) => setSelectedPicture(photo)} />
+          {/* <AddPhoto onSelect={(photo) => setSelectedPicture(photo)} /> */}
 
           <Button
             className="my-4 p-2"
-            disabled={name === "" || description === "" || !selectedPicture}
+            disabled={name === "" || description === ""}
             onClick={() => handleSubmit()}
           >
             Create Project
           </Button>
+          <div
+            className={`p-4 font-bold text-xl text-red-600 uppercase text-center`}
+          >
+            {error}
+          </div>
         </>
       )}
     </div>
